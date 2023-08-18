@@ -15,11 +15,15 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
 
     private bool canDoubleJump = true;
+    private bool canWallJump = true;
     private bool canWallSlide;
     private bool isWallSliding;
 
     private bool facingRight = true;
     private float movingImput;
+    private int facingDirection = 1;
+    [SerializeField] private Vector2 wallJumpDirection;
+
 
     [Header("Collision infor")]
     [SerializeField] private Transform groudCheck;
@@ -44,8 +48,6 @@ public class PlayerController : MonoBehaviour
     {
         CheckInput ();
 
-
-
         CollisionCheck();
         FlipController();
         AnimatorController();
@@ -55,14 +57,21 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
+            canMove = true;
             canDoubleJump = true;
         }
+
+        if(Input.GetAxis("Vertical") < 0)
+        {
+            canWallSlide = false;
+        }
+
         if (isWallDetected && canWallSlide)
         {
             isWallSliding = true;
             rb.velocity = new Vector2 (rb.velocity.x, rb.velocity.y * 0.1f);
         }
-        else
+        else if (!isWallDetected)
         {
             isWallSliding = false;
             Move();
@@ -89,15 +98,23 @@ public class PlayerController : MonoBehaviour
 
     private void JumpButton()
     {
-        if (isGrounded)
+        if(isWallSliding && canWallJump)
+        {
+            WallJump();
+        }
+
+        else if (isGrounded)
         {
             Jump();
         }
         else if (canDoubleJump)
         {
+            canMove = true;
             canDoubleJump = false;
             Jump();
         }
+        canWallSlide = false;
+
     }
 
     private void Jump()
@@ -105,6 +122,14 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
 
+    private void WallJump()
+    {
+        canMove = false;
+
+        Vector2 direction = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
+
+        rb.AddForce(direction, ForceMode2D.Impulse);
+    }
 
     private void AnimatorController()
     {
@@ -134,6 +159,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Flip()
     {
+        facingDirection = facingDirection * -1;
         facingRight = !facingRight;
         transform.Rotate(0,180,0);
     }
