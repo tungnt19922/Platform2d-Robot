@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Rigidbody2D rb;
 
-    public int fruits;
+    //public int fruits;
 
     [Header("Moveinfo")]
     [SerializeField] private float speed = 5f;
