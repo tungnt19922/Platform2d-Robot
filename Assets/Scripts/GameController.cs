@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [Header("Score Manager")]
-    [SerializeField] public int score;
+    private UIManager UImng;
+
+    [Header("UI Manager")]
+    [SerializeField] private int score;
+    [SerializeField] private bool isGameover;
 
 
     // Start is called before the first frame update
     void Start()
     {
         score = 0;
+        UImng = FindObjectOfType<UIManager>();
+        UImng.SetScoreText("SCORE: " + score);
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     public void SetScore(int value)
@@ -33,6 +37,7 @@ public class GameController : MonoBehaviour
     public void ScoreIncrement()
     {
         score++;
+        UImng.SetScoreText("SCORE: " + score);
     }
 
 }
