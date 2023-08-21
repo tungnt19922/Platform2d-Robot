@@ -8,11 +8,14 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Rigidbody2D rb;
 
+    public int fruits;
+
     [Header("Moveinfo")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 12;
 
     private bool canMove = true;
+
 
     private bool canDoubleJump = true;
     private bool canWallSlide;
@@ -118,6 +121,7 @@ public class PlayerController : MonoBehaviour
     private void WallJump()
     {
         canMove = false;
+        canDoubleJump = true;
 
         rb.velocity = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
 
