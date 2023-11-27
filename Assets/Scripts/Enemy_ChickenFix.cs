@@ -25,6 +25,7 @@ public class Enemy_ChickenFix : MonoBehaviour
     private bool wallDetected;
     private int facingDirection = -1;
 
+    private bool isKilled;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +53,7 @@ public class Enemy_ChickenFix : MonoBehaviour
             Flip();
             idleTimeCounter = idleTime;
         }
-
+        AnimatorController();
     }
 
     private void Flip()
@@ -72,4 +73,20 @@ public class Enemy_ChickenFix : MonoBehaviour
         Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance * facingDirection, wallCheck.position.y));
     }
+
+    private void AnimatorController()
+    {
+        anim.SetBool("isKilled", isKilled);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isKilled = true;
+            Debug.Log("tieu diet enemy");
+            Destroy(gameObject);
+        }
+    }
+
 }

@@ -9,8 +9,8 @@ public class Trap : MonoBehaviour
     {
         if(collision.GetComponent<PlayerController>() != null)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Debug.Log("Knock back!");
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

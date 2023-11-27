@@ -8,19 +8,13 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Rigidbody2D rb;
 
-    //public int fruits;
-
     [Header("Moveinfo")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 12;
-
     private bool canMove = true;
-
-
     private bool canDoubleJump = true;
     private bool canWallSlide;
     private bool isWallSliding;
-
     private bool facingRight = true;
     private float movingImput;
     private int facingDirection = 1;
@@ -31,6 +25,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private float wallCheckDistance;
+
+    [Header("PlayerHealth")]
+    [SerializeField] private float health = 3;
 
     private bool isGrounded;
     private bool isWallDetected;
@@ -46,7 +43,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         CollisionCheck();
         FlipController();
         AnimatorController();
@@ -58,16 +54,13 @@ public class PlayerController : MonoBehaviour
             canDoubleJump = true;
         }
 
-
         if (canWallSlide)
         {
             isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.1f);
         }
-
         Move();
     }
-
 
     private void CheckInput()
     {
@@ -82,8 +75,6 @@ public class PlayerController : MonoBehaviour
         {
             JumpButton();
         }
-
-
     }
 
     private void Move()
@@ -179,6 +170,15 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + wallCheckDistance * facingDirection, transform.position.y));
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - groundCheckDistance));
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Va cham voi enemy");
+        }
     }
 
 }
