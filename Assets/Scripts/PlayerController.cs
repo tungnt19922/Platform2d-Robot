@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
         canWallSlide = false;
-
     }
 
     private void Jump()
@@ -111,11 +110,11 @@ public class PlayerController : MonoBehaviour
 
     private void WallJump()
     {
-        canMove = false;
+        //canMove = false;
         canDoubleJump = true;
 
-        rb.velocity = new Vector2(wallJumpDirection.x * -facingDirection, wallJumpDirection.y);
-
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        isWallSliding = false;
     }
 
     private void AnimatorController()
@@ -171,7 +170,6 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x + wallCheckDistance * facingDirection, transform.position.y));
         Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - groundCheckDistance));
     }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

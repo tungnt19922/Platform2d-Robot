@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class Enemy_ChickenFix : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    private Rigidbody2D enemyrb;
+    private Rigidbody2D playerrb;
     private Animator anim;
+    private PlayerController playerController;
 
     [Header("Move info")]
     [SerializeField] private float moveSpeed;
@@ -30,23 +32,24 @@ public class Enemy_ChickenFix : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        enemyrb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerrb = FindObjectOfType<PlayerController>().GetComponent<Rigidbody2D>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        anim.SetFloat("xVelocity", rb.velocity.x);
+        anim.SetFloat("xVelocity", enemyrb.velocity.x);
         CollisionCheck();
 
         idleTimeCounter -= Time.deltaTime;
         if (idleTimeCounter < 0)
-            rb.velocity = new Vector2(moveSpeed * facingDirection, rb.velocity.y);
+            enemyrb.velocity = new Vector2(moveSpeed * facingDirection, enemyrb.velocity.y);
 
         else
-            rb.velocity = new Vector2(0, 0);
+            enemyrb.velocity = new Vector2(0, 0);
 
         if (wallDetected || !groundDetected)
         {
@@ -84,9 +87,24 @@ public class Enemy_ChickenFix : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             isKilled = true;
-            Debug.Log("tieu diet enemy");
-            Destroy(gameObject);
+            moveSpeed = 0;
+            if (playerrb != null)
+            {
+                Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
+                float pushForce = 20f;
+                playerrb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+                Debug.Log("co luc day len");
+            }
+            StartCoroutine(DestroyAfterAnimation());
         }
     }
-
+    IEnumerator DestroyAfterAnimation()
+    {       
+        if (anim != null)
+        {
+            anim.SetTrigger("isKilled"); 
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        }
+        Destroy(gameObject);
+    }
 }
