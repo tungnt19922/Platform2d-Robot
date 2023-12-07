@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
+    private GameController gc;
 
     [Header("Moveinfo")]
     [SerializeField] private float speed = 5f;
@@ -38,6 +41,7 @@ public class PlayerController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        gc = GetComponent<GameController>();
     }
 
     // Update is called once per frame
@@ -177,6 +181,25 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Va cham voi enemy");
         }
+
+        if (collision.gameObject.CompareTag("EndPoint"))
+        {
+            LoadScene();
+        }
+        if (collision.gameObject.CompareTag("Fruits"))
+        {
+            gc.ScoreIncrement();
+        }
+
     }
+
+    private void LoadScene()
+    {
+        Debug.Log("load scene 2");
+        SceneManager.LoadScene("Level2");
+    }
+
+
+
 
 }

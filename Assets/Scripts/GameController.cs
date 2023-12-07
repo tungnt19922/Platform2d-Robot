@@ -39,5 +39,4 @@ public class GameController : MonoBehaviour
         score++;
         UImng.SetScoreText("SCORE: " + score);
     }
-
 }
